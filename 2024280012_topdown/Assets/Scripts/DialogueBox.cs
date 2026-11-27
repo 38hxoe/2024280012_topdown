@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using TMPro;
 public class DialogueBox : MonoBehaviour
@@ -12,11 +13,13 @@ public class DialogueBox : MonoBehaviour
     public bool isOpen = false;
     public Talk nearTalk;
     public Door nearDoor;
+    public Image portraitImage;
     private Talk current;
     private int index = 0;
     private bool choosing = false;
     void Update()
     {
+        if (Time.timeScale == 0f) { return; }
         Keyboard kb = Keyboard.current;
         if (choosing)
         {
@@ -38,10 +41,15 @@ public class DialogueBox : MonoBehaviour
         panel.SetActive(true);
         ShowLine();
     }
+
     void ShowLine()
     {
         nameText.text = current.lines[index].speaker;
         bodyText.text = current.lines[index].text;
+        Sprite face = current.lines[index].portrait;   // 추가
+        portraitImage.sprite = face;   // 추가
+        portraitImage.gameObject.SetActive(face != null);
+
         bool last = index == current.lines.Length - 1;
         if (last && current.choice1 != "") { ShowChoices(); }
     }
